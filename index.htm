@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        const apiUrl = "https://api.openai.com/v1/chat/completions"
+        const apiKey = ""
+
+        async function postData() {
+            const message = document.getElementById('message').value
+            console.log(message)
+            fetch(apiUrl, {
+                method:"POST",
+                headers:{
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify(
+                    {
+                        "model": "gpt-3.5-turbo",
+                        "messages": [
+                            {
+                                "role": "user",
+                                "content": `Write a javascript code for this question:
+                                ${message}`
+                            }
+                        ]
+                    }
+                )
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                console.log("Done");
+                const responseText = data.choices[0].message.content.trim();
+                const card = document.createElement('pre');
+                card.innerHTML = responseText
+                document.getElementById('chat-area').appendChild(card)
+            })
+        }
+    </script>
+    <style>
+        .dark{
+            background-color: #1b1b1b;
+            color: #fff;
+        }
+        .card{
+            background-color: #000;
+            color: #fff;
+            margin: 10px;
+            border: 1px solid;
+        }    
+        .input{
+            margin: 0 auto;
+            margin-top: 30px;
+            height: 200px;
+            width: 80%;
+            display: block;
+        }
+    </style>
+</head>
+<body class = "dark">
+    <h1>Get the solution of LEETcode problems</h1>
+    <form>
+        <label for="message">Enter your code</form>
+        <textarea class="input" id="message" cols = "30" rows = "10"></textarea>
+        <button type = "button" onClick = "postData()">send Code</button>
+        <div id = "chat-area">test</div>
+    </form>
+</body>
+</html>
